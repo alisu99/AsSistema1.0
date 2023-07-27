@@ -104,7 +104,6 @@ def adicionar():
                 texto_cidade["text"] = ''
                 texto_uf["text"] = ''
 
-
 def limpar_endereco():
     entry_cep.delete(first=0, last=len(entry_cep.get()))
     entry_numero.delete(first=0, last=len(entry_numero.get()))
@@ -136,7 +135,6 @@ def atualizar_tabela():
             messagebox.showerror('Erro', e.msg)
         for mensalista in mensalistas:
             tab.insert('', END, values=mensalista)
-
 
 def pesquisar():
     if len(entry_pesquisar.get()) == 0:
