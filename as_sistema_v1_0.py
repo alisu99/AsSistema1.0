@@ -9,11 +9,11 @@ from requests import get
 import json.decoder
 import pandas as pd
 import os
-
+import openpyxl
 
 parametros = dict(
     host='localhost',
-    passwd='(senha)',
+    passwd='132,mysql',
     port=3306,
     user='root',
     database='estacionamento'
@@ -67,15 +67,25 @@ def buscar():  # cep
 def adicionar():
     sql = 'INSERT INTO mensalistas (nome, cpf, valor, data_vencimento, endereco) VALUES (%s, %s, %s, %s, %s)'
     args = (f'{entry_nome.get()}'.title(),
+            
+            f'{entry_cpf.get()}' if "." in entry_cpf.get() or "-" in entry_cpf.get() else 
             '{}.{}.{}-{}'.format(entry_cpf.get()[0:3], entry_cpf.get()[3:6], entry_cpf.get()[6:9],
-                                 entry_cpf.get()[9:11]),
+            entry_cpf.get()[9:11]),
+
             f'{entry_valor.get()}',
+
             f'{entry_vencimento.get()}',
+
             f'''{texto_logradouro["text"] +
+
                  ', ' + texto_complemento["text"] +
-                 ' N° ' + entry_numero.get() +
+
+                 (' N° ' + entry_numero.get() if len(entry_numero.get()) > 0 else ' S/N') +
+
                  ', ' + texto_bairro["text"] +
+
                  ' ' + texto_cidade["text"] +
+
                  '-' + texto_uf["text"] if len(entry_cep.get()) > 0 else ""}'''
             )
 
@@ -171,6 +181,33 @@ def excluir():
             messagebox.showerror('Erro!', 'Selecione um mensalista na tabela para excluir!')
 
 
+def editar_mensalista():
+    try:
+        if len(entry_nome.get()) <= 0: 
+            item_selecionado = tab.focus()
+            detalhe = tab.item(item_selecionado)
+            resultado = detalhe['values']
+            print(resultado)
+            entry_nome.insert(0, resultado[1])
+            entry_cpf.insert(0, resultado[2])
+            entry_valor.insert(0, resultado[3])
+            entry_vencimento.insert(0, resultado[4])  
+        else:
+            entry_nome.delete(first=0, last=len(entry_nome.get()))
+            entry_cpf.delete(first=0, last=len(entry_cpf.get()))
+            entry_valor.delete(first=0, last=len(entry_valor.get()))
+            entry_vencimento.delete(first=0, last=len(entry_vencimento.get()))
+
+            item_selecionado = tab.focus()
+            detalhe = tab.item(item_selecionado)
+            resultado = detalhe['values']
+            entry_nome.insert(0, resultado[1])
+            entry_cpf.insert(0, resultado[2])
+            entry_valor.insert(0, resultado[3])
+            entry_vencimento.insert(0, resultado[4]) 
+    except IndexError:
+        messagebox.showerror('', 'Selecione um mensalista para editar!')
+
 def to_excel():
     for item in tab.get_children():
         tab.delete(item)
@@ -182,10 +219,21 @@ def to_excel():
             cursor.execute(sql)
             mensalistas = cursor.fetchall()
             dados = pd.DataFrame(data=mensalistas)
-            dados.to_excel('tabela_estacionamento.xlsx', columns=[0, 1, 2, 3, 4, 5])
+            dados.to_excel('tabela_estacionamento.xlsx', columns=[1, 2, 3, 4, 5], header=['Nome', 'CPF', 'Valor', 'Início', 'Endereço'])
+            wb = openpyxl.load_workbook('tabela_estacionamento.xlsx')
+            sheet = wb.active
+            sheet.column_dimensions['A'].width = 5
+            sheet.column_dimensions['B'].width = 25
+            sheet.column_dimensions['C'].width = 16
+            sheet.column_dimensions['D'].width = 12
+            sheet.column_dimensions['E'].width = 20
+            sheet.column_dimensions['F'].width = 62
+            wb.save('tabela_estacionamento.xlsx')
             os.startfile('tabela_estacionamento.xlsx')
         except ProgrammingError as e:
             messagebox.showerror('Erro', e.msg)
+        except PermissionError:
+            messagebox.showinfo('', 'A tabela ja foi aberta!')
 
 
 janela = Tk()
@@ -337,5 +385,10 @@ excluir.place(x=105, y=4)
 abrir_excel = Button(info, width=15, height=1, text='Abrir no excel', font='Impact 9', bg='#289c2e', fg='white',
                      command=to_excel)
 abrir_excel.place(x=210, y=4)
+
+# botão editar mensalista
+editar = Button(info, width=15, height=1, text='Editar mensalista', font='Impact 9', bg='#289c2e', fg='white',
+                     command=editar_mensalista)
+editar.place(x=315, y=4)
 
 janela.mainloop()
