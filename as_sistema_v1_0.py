@@ -236,6 +236,62 @@ def to_excel():
             messagebox.showinfo('', 'A tabela ja foi aberta!')
 
 
+def salvar_alteracoes():
+    item_selecionado = tab.focus()
+    detalhe = tab.item(item_selecionado)
+    resultado = detalhe['values']
+    id_selecionado = resultado[0]
+    sql = 'UPDATE mensalistas SET (nome, cpf, valor, data_vencimento, endereco) VALUES (%s, %s, %s, %s, %s) WHERE id = %s'
+    args = (f'{entry_nome.get()}'.title().split('\n'),
+            
+            f'{entry_cpf.get()}' if "." in entry_cpf.get() or "-" in entry_cpf.get() else 
+            '{}.{}.{}-{}'.format(entry_cpf.get()[0:3], entry_cpf.get()[3:6], entry_cpf.get()[6:9],
+            entry_cpf.get()[9:11]),
+
+            f'{entry_valor.get()}',
+
+            f'{entry_vencimento.get()}',
+
+            f'''{texto_logradouro["text"] +
+
+                 ', ' + texto_complemento["text"] +
+
+                 (' N° ' + entry_numero.get() if len(entry_numero.get()) > 0 else ' S/N') +
+
+                 ', ' + texto_bairro["text"] +
+
+                 ' ' + texto_cidade["text"] +
+
+                 '-' + texto_uf["text"] if len(entry_cep.get()) > 0 else ""}'''
+            )
+
+    with nova_conexao() as conexao:
+        if len(entry_nome.get()) == 0 or len(entry_cpf.get()) == 0 or len(entry_valor.get()) == 0:
+            messagebox.showerror('Erro!', 'Todos os campos da aba "Dados" são obrigatórios!')
+        else:
+            try:
+                cursor = conexao.cursor()
+                cursor.execute(sql, args)
+                conexao.commit()
+                atualizar_tabela()
+            except KeyError as e:
+                messagebox.showerror('Erro:', f'{e.msg}')
+            else:
+                messagebox.showinfo('Sucesso!', 'Mensalista adicionado!')
+                entry_cep.delete(first=0, last=len(entry_cep.get()))
+                entry_nome.delete(first=0, last=len(entry_nome.get()))
+                entry_cpf.delete(first=0, last=len(entry_cpf.get()))
+                entry_valor.delete(first=0, last=len(entry_valor.get()))
+                entry_vencimento.delete(first=0, last=len(entry_vencimento.get()))
+                entry_numero.delete(first=0, last=len(entry_numero.get()))
+                texto_logradouro["text"] = ''
+                texto_complemento["text"] = ''
+                texto_bairro["text"] = ''
+                texto_cidade["text"] = ''
+                texto_uf["text"] = ''
+
+
+
 janela = Tk()
 janela.title('AS Sistemas v1.0')
 janela.geometry('834x610+400+50')
@@ -372,23 +428,27 @@ botao_pesquisar = Button(info, width=8, height=0, text='Pesquisar', font='Impact
 botao_pesquisar.place(x=726, y=2)
 
 # botão de atualizar tabela
-atualizar_tab = Button(info, width=15, height=1, text='Atualizar Tabela', font='Impact 9', bg='#4353fa', fg='white',
+atualizar_tab = Button(info, width=13, height=1, text='Atualizar Tabela', font='Impact 9', bg='#4353fa', fg='white',
                        command=atualizar_tabela)
 atualizar_tab.place(x=0, y=4)
 
 # botão de excluir
-excluir = Button(info, text='Excluir mensalista', width=15, height=1, font='Impact 9', bg='#d10404', fg='white',
+excluir = Button(info, text='Excluir', width=6, height=1, font='Impact 9', bg='#d10404', fg='white',
                  command=excluir)
-excluir.place(x=105, y=4)
+excluir.place(x=90, y=4)
 
 # transformar em excel
-abrir_excel = Button(info, width=15, height=1, text='Abrir no excel', font='Impact 9', bg='#289c2e', fg='white',
+abrir_excel = Button(info, width=11, height=1, text='Abrir no excel', font='Impact 9', bg='#289c2e', fg='white',
                      command=to_excel)
-abrir_excel.place(x=210, y=4)
+abrir_excel.place(x=138, y=4)
 
 # botão editar mensalista
-editar = Button(info, width=15, height=1, text='Editar mensalista', font='Impact 9', bg='#289c2e', fg='white',
+editar = Button(info, width=6, height=1, text='Editar', font='Impact 9', bg='#b59f12', fg='white',
                      command=editar_mensalista)
-editar.place(x=315, y=4)
+editar.place(x=230, y=4)
+
+# botão salvar alterações
+salvar = Button(info, width=14, height=1, text='Salvar alterações', font='Impact 9', bg='#289c2e', fg='white', command=salvar_alteracoes)
+salvar.place(x=278, y=4)
 
 janela.mainloop()
