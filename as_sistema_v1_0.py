@@ -68,7 +68,7 @@ def adicionar():
     sql = 'INSERT INTO mensalistas (nome, cpf, valor, data_vencimento, endereco) VALUES (%s, %s, %s, %s, %s)'
     args = (f'{entry_nome.get()}'.title(),
             
-            f'{entry_cpf.get()}' if "." in entry_cpf.get() or "-" in entry_cpf.get() else 
+            f'{entry_cpf.get()}' if "." in entry_cpf.get() and "-" in entry_cpf.get() else 
             '{}.{}.{}-{}'.format(entry_cpf.get()[0:3], entry_cpf.get()[3:6], entry_cpf.get()[6:9],
             entry_cpf.get()[9:11]),
 
