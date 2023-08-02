@@ -278,6 +278,7 @@ def salvar_alteracoes():
                 messagebox.showerror('Erro:', f'{e.msg}')
             except DataError:
                 messagebox.showerror('', 'Os dados informados estão errados! Verifique os dados e tente novamente.')
+
             else:
                 messagebox.showinfo('Sucesso!', f'Mensalista atualizado!\nId: {resultado[0]}\nNome: {resultado[1]}\nCPF: {resultado[2]}')
                 entry_cep.delete(first=0, last=len(entry_cep.get()))
@@ -326,16 +327,16 @@ label_valor.place(x=180, y=40)
 entry_valor = Entry(dados, width=6, border=1, borderwidth=2, font='Calinre 10')
 entry_valor.place(x=237, y=40)
 
-label_vencimento = Label(dados, text='Data inicial (dd/mm/aaaa)', font='Calibre 10')
+label_vencimento = Label(dados, text='Data inicial', font='Calibre 10')
 label_vencimento.place(x=20, y=70)
 entry_vencimento = DateEntry(dados, width=10, border=1, borderwidth=2, font='Calinre 10', justify=CENTER, locale='pt_br')
-entry_vencimento.place(x=190, y=70)
+entry_vencimento.place(x=100, y=70)
 
 limpar_dados = Button(dados, width=6, text='Limpar', font='Impact 9', bg='#d10404', fg='white',
                       command=limpar_dados)
-limpar_dados.place(x=95, y=110)
+limpar_dados.place(x=62, y=110)
 
-adicionar = Button(dados, width=13, text='Adicionar', font='Impact 9', bg='#289c2e', fg='white', command=adicionar)
+adicionar = Button(dados, width=8, text='Adicionar', font='Impact 9', bg='#289c2e', fg='white', command=adicionar)
 adicionar.place(x=2, y=110)
 
 # ------------------ endereço -----------------------------------------------------------
@@ -421,13 +422,13 @@ info = LabelFrame(janela, width=824, height=42)
 info.place(x=5, y=194)
 
 label_pesquisar_nome = Label(info, text='Nome', font='Calibre 10', fg='black')
-label_pesquisar_nome.place(x=505, y=6)
-entry_pesquisar = Entry(info, width=24, border=3, borderwidth=2, font='Calinre 10')
-entry_pesquisar.place(x=548, y=6)
+label_pesquisar_nome.place(x=530, y=6)
+entry_pesquisar = Entry(info, width=24, border=6, borderwidth=5, font='Calinre 10')
+entry_pesquisar.place(x=572, y=5)
 
 botao_pesquisar = Button(info, width=8, height=0, text='Pesquisar', font='Impact 9', bg='#289c2e', fg='white',
                          command=pesquisar)
-botao_pesquisar.place(x=726, y=2)
+botao_pesquisar.place(x=757, y=4)
 
 # botão de atualizar tabela
 atualizar_tab = Button(info, width=13, height=1, text='Atualizar Tabela', font='Impact 9', bg='#4353fa', fg='white',
@@ -450,7 +451,8 @@ editar = Button(info, width=6, height=1, text='Editar', font='Impact 9', bg='#b5
 editar.place(x=230, y=4)
 
 # botão salvar alterações
-salvar = Button(info, width=14, height=1, text='Salvar alterações', font='Impact 9', bg='#289c2e', fg='white', command=salvar_alteracoes)
+salvar = Button(info, width=14, height=1, text='Salvar alterações', font='Impact 9', bg='#289c2e', fg='white', 
+command=salvar_alteracoes)
 salvar.place(x=278, y=4)
 
 janela.mainloop()
