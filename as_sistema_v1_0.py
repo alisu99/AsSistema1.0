@@ -187,11 +187,10 @@ def editar_mensalista():
             item_selecionado = tab.focus()
             detalhe = tab.item(item_selecionado)
             resultado = detalhe['values']
-            print(resultado)
             entry_nome.insert(0, resultado[1])
             entry_cpf.insert(0, resultado[2])
             entry_valor.insert(0, resultado[3])
-            entry_vencimento.insert(0, resultado[4])  
+            entry_vencimento.insert(0, resultado[4]) 
         else:
             entry_nome.delete(first=0, last=len(entry_nome.get()))
             entry_cpf.delete(first=0, last=len(entry_cpf.get()))
@@ -204,7 +203,13 @@ def editar_mensalista():
             entry_nome.insert(0, resultado[1])
             entry_cpf.insert(0, resultado[2])
             entry_valor.insert(0, resultado[3])
-            entry_vencimento.insert(0, resultado[4]) 
+            entry_vencimento.insert(0, resultado[4])
+        print(type(resultado[0]))
+        print(type(resultado[1]))
+        print(type(resultado[2]))
+        print(type(resultado[3]))
+        print(type(resultado[4]))
+        print(type(resultado[5]))
     except IndexError:
         messagebox.showerror('', 'Selecione um mensalista para editar!')
 
@@ -241,10 +246,10 @@ def salvar_alteracoes():
     detalhe = tab.item(item_selecionado)
     resultado = detalhe['values']
     id_selecionado = resultado[0]
-    sql = 'UPDATE mensalistas SET (nome, cpf, valor, data_vencimento, endereco) VALUES (%s, %s, %s, %s, %s) WHERE id = %s'
-    args = (f'{entry_nome.get()}'.title().split('\n'),
+    sql = 'UPDATE mensalistas SET nome = %s, cpf = %s, valor = %s, data_vencimento = %s, endereco = %s WHERE id = %s'
+    args = (f'{entry_nome.get()}'.title(),
             
-            f'{entry_cpf.get()}' if "." in entry_cpf.get() or "-" in entry_cpf.get() else 
+            f'{entry_cpf.get()}' if "." in entry_cpf.get() and "-" in entry_cpf.get() else 
             '{}.{}.{}-{}'.format(entry_cpf.get()[0:3], entry_cpf.get()[3:6], entry_cpf.get()[6:9],
             entry_cpf.get()[9:11]),
 
@@ -262,7 +267,7 @@ def salvar_alteracoes():
 
                  ' ' + texto_cidade["text"] +
 
-                 '-' + texto_uf["text"] if len(entry_cep.get()) > 0 else ""}'''
+                 '-' + texto_uf["text"] if len(entry_cep.get()) > 0 else ""}''', f'{item_selecionado}'
             )
 
     with nova_conexao() as conexao:
