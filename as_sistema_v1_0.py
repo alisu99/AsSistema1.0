@@ -4,7 +4,7 @@ from tkinter.ttk import Treeview
 from tkcalendar import DateEntry
 from mysql.connector import connect
 from contextlib import contextmanager
-from mysql.connector import ProgrammingError
+from mysql.connector import ProgrammingError, DataError
 from requests import get
 import json.decoder
 import pandas as pd
@@ -187,10 +187,10 @@ def editar_mensalista():
             item_selecionado = tab.focus()
             detalhe = tab.item(item_selecionado)
             resultado = detalhe['values']
-            entry_nome.insert(0, resultado[1])
-            entry_cpf.insert(0, resultado[2])
-            entry_valor.insert(0, resultado[3])
-            entry_vencimento.insert(0, resultado[4]) 
+            str(entry_nome.insert(0, resultado[1]))
+            str(entry_cpf.insert(0, resultado[2]))
+            str(entry_valor.insert(0, resultado[3]))
+            str(entry_vencimento.insert(0, resultado[4]))
         else:
             entry_nome.delete(first=0, last=len(entry_nome.get()))
             entry_cpf.delete(first=0, last=len(entry_cpf.get()))
@@ -204,14 +204,9 @@ def editar_mensalista():
             entry_cpf.insert(0, resultado[2])
             entry_valor.insert(0, resultado[3])
             entry_vencimento.insert(0, resultado[4])
-        print(type(resultado[0]))
-        print(type(resultado[1]))
-        print(type(resultado[2]))
-        print(type(resultado[3]))
-        print(type(resultado[4]))
-        print(type(resultado[5]))
     except IndexError:
         messagebox.showerror('', 'Selecione um mensalista para editar!')
+
 
 def to_excel():
     for item in tab.get_children():
@@ -246,7 +241,7 @@ def salvar_alteracoes():
     detalhe = tab.item(item_selecionado)
     resultado = detalhe['values']
     id_selecionado = resultado[0]
-    sql = 'UPDATE mensalistas SET nome = %s, cpf = %s, valor = %s, data_vencimento = %s, endereco = %s WHERE id = %s'
+    sql = "UPDATE mensalistas SET nome = %s, cpf = %s, valor = %s, data_vencimento = %s, endereco = %s WHERE id = %s"
     args = (f'{entry_nome.get()}'.title(),
             
             f'{entry_cpf.get()}' if "." in entry_cpf.get() and "-" in entry_cpf.get() else 
@@ -267,7 +262,7 @@ def salvar_alteracoes():
 
                  ' ' + texto_cidade["text"] +
 
-                 '-' + texto_uf["text"] if len(entry_cep.get()) > 0 else ""}''', f'{item_selecionado}'
+                 '-' + texto_uf["text"] if len(entry_cep.get()) > 0 else ""}''', id_selecionado
             )
 
     with nova_conexao() as conexao:
@@ -281,8 +276,10 @@ def salvar_alteracoes():
                 atualizar_tabela()
             except KeyError as e:
                 messagebox.showerror('Erro:', f'{e.msg}')
+            except DataError:
+                messagebox.showerror('', 'Os dados informados estão errados! Verifique os dados e tente novamente.')
             else:
-                messagebox.showinfo('Sucesso!', 'Mensalista adicionado!')
+                messagebox.showinfo('Sucesso!', 'Mensalista atualizado!')
                 entry_cep.delete(first=0, last=len(entry_cep.get()))
                 entry_nome.delete(first=0, last=len(entry_nome.get()))
                 entry_cpf.delete(first=0, last=len(entry_cpf.get()))
