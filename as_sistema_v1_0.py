@@ -279,7 +279,7 @@ def salvar_alteracoes():
             except DataError:
                 messagebox.showerror('', 'Os dados informados estão errados! Verifique os dados e tente novamente.')
             else:
-                messagebox.showinfo('Sucesso!', 'Mensalista atualizado!')
+                messagebox.showinfo('Sucesso!', f'Mensalista atualizado!\nId: {resultado[0]}\nNome: {resultado[1]}\nCPF: {resultado[2]}')
                 entry_cep.delete(first=0, last=len(entry_cep.get()))
                 entry_nome.delete(first=0, last=len(entry_nome.get()))
                 entry_cpf.delete(first=0, last=len(entry_cpf.get()))
