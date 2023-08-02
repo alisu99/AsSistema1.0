@@ -190,6 +190,7 @@ def editar_mensalista():
             str(entry_nome.insert(0, resultado[1]))
             str(entry_cpf.insert(0, resultado[2]))
             str(entry_valor.insert(0, resultado[3]))
+            entry_vencimento.delete(first=0, last=len(entry_vencimento.get()))
             str(entry_vencimento.insert(0, resultado[4]))
         else:
             entry_nome.delete(first=0, last=len(entry_nome.get()))
@@ -280,7 +281,7 @@ def salvar_alteracoes():
                 messagebox.showerror('', 'Os dados informados estão errados! Verifique os dados e tente novamente.')
 
             else:
-                messagebox.showinfo('Sucesso!', f'Mensalista atualizado!\nId: {resultado[0]}\nNome: {resultado[1]}\nCPF: {resultado[2]}')
+                messagebox.showinfo('Sucesso!', f'Mensalista atualizado!\nId: {resultado[0]}\nNome: {entry_nome.get()}\nCPF: {entry_cpf.get()}\nValor: {entry_valor.get()}\nData inicial: {entry_vencimento.get()}')
                 entry_cep.delete(first=0, last=len(entry_cep.get()))
                 entry_nome.delete(first=0, last=len(entry_nome.get()))
                 entry_cpf.delete(first=0, last=len(entry_cpf.get()))
