@@ -136,6 +136,9 @@ def limpar_dados():
 
 
 def atualizar_tabela():
+    salvar['state'] = DISABLED
+    salvar['bg'] = '#9e9e9e'
+
     for item in tab.get_children():
         tab.delete(item)
     sql = 'SELECT * FROM mensalistas'
@@ -252,6 +255,8 @@ def to_excel():
 def salvar_alteracoes():
     adicionar['state'] = NORMAL
     adicionar['bg'] = '#289c2e'
+    salvar['state'] = DISABLED
+    salvar['bg'] = '#9e9e9e'
     item_selecionado = tab.focus()
     detalhe = tab.item(item_selecionado)
     resultado = detalhe['values']
