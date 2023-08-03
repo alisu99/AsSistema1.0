@@ -136,6 +136,7 @@ def limpar_dados():
 
 
 def atualizar_tabela():
+    entry_pesquisar.delete(first=0, last=len(entry_pesquisar.get()))
     salvar['state'] = DISABLED
     salvar['bg'] = '#9e9e9e'
 
