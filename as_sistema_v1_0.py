@@ -125,6 +125,10 @@ def limpar_endereco():
 
 
 def limpar_dados():
+    adicionar['state'] = NORMAL
+    adicionar['bg'] = '#289c2e'
+    salvar['state'] = DISABLED
+    salvar['bg'] = '#9e9e9e'
     entry_nome.delete(first=0, last=len(entry_nome.get()))
     entry_cpf.delete(first=0, last=len(entry_cpf.get()))
     entry_valor.delete(first=0, last=len(entry_valor.get()))
@@ -182,6 +186,10 @@ def excluir():
 
 
 def editar_mensalista():
+    adicionar['state'] = DISABLED
+    adicionar['bg'] = '#9e9e9e'
+    salvar['state'] = NORMAL
+    salvar['bg'] = '#289c2e'
     try:
         if len(entry_nome.get()) <= 0: 
             item_selecionado = tab.focus()
@@ -207,6 +215,10 @@ def editar_mensalista():
             entry_vencimento.insert(0, resultado[4])
     except IndexError:
         messagebox.showerror('', 'Selecione um mensalista para editar!')
+        adicionar['state'] = NORMAL
+        adicionar['bg'] = '#289c2e'
+        salvar['state'] = DISABLED
+        salvar['bg'] = '#9e9e9e'
 
 
 def to_excel():
@@ -238,6 +250,8 @@ def to_excel():
 
 
 def salvar_alteracoes():
+    adicionar['state'] = NORMAL
+    adicionar['bg'] = '#289c2e'
     item_selecionado = tab.focus()
     detalhe = tab.item(item_selecionado)
     resultado = detalhe['values']
@@ -452,8 +466,8 @@ editar = Button(info, width=6, height=1, text='Editar', font='Impact 9', bg='#b5
 editar.place(x=230, y=4)
 
 # botão salvar alterações
-salvar = Button(info, width=14, height=1, text='Salvar alterações', font='Impact 9', bg='#289c2e', fg='white', 
-command=salvar_alteracoes)
+salvar = Button(info, width=14, height=1, text='Salvar alterações', font='Impact 9', bg='#9e9e9e', fg='white', 
+command=salvar_alteracoes, state=DISABLED)
 salvar.place(x=278, y=4)
 
 janela.mainloop()
