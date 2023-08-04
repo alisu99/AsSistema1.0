@@ -114,6 +114,7 @@ def adicionar():
                 texto_cidade["text"] = ''
                 texto_uf["text"] = ''
 
+
 def limpar_endereco():
     entry_cep.delete(first=0, last=len(entry_cep.get()))
     entry_numero.delete(first=0, last=len(entry_numero.get()))
@@ -136,6 +137,10 @@ def limpar_dados():
 
 
 def atualizar_tabela():
+    entry_nome.delete(first=0, last=len(entry_nome.get()))
+    entry_cpf.delete(first=0, last=len(entry_cpf.get()))
+    entry_valor.delete(first=0, last=len(entry_valor.get()))
+    entry_vencimento.delete(first=0, last=len(entry_vencimento.get()))
     entry_pesquisar.delete(first=0, last=len(entry_pesquisar.get()))
     salvar['state'] = DISABLED
     salvar['bg'] = '#9e9e9e'
@@ -153,6 +158,7 @@ def atualizar_tabela():
             messagebox.showerror('Erro', e.msg)
         for mensalista in mensalistas:
             tab.insert('', END, values=mensalista)
+
 
 def pesquisar():
     if len(entry_pesquisar.get()) == 0:
@@ -294,14 +300,13 @@ def salvar_alteracoes():
                 cursor = conexao.cursor()
                 cursor.execute(sql, args)
                 conexao.commit()
-                atualizar_tabela()
             except KeyError as e:
                 messagebox.showerror('Erro:', f'{e.msg}')
             except DataError:
                 messagebox.showerror('', 'Os dados informados estão errados! Verifique os dados e tente novamente.')
 
             else:
-                messagebox.showinfo('Sucesso!', f'Mensalista atualizado!\nId: {resultado[0]}\nNome: {entry_nome.get()}\nCPF: {entry_cpf.get()}\nValor: {entry_valor.get()}\nData inicial: {entry_vencimento.get()}')
+                messagebox.showinfo('Sucesso!', f'Mensalista atualizado!\nId: {resultado[0]}\nNome: {entry_nome.get().title()}\nCPF: {entry_cpf.get()}\nValor: {entry_valor.get()}\nData inicial: {entry_vencimento.get()}')
                 entry_cep.delete(first=0, last=len(entry_cep.get()))
                 entry_nome.delete(first=0, last=len(entry_nome.get()))
                 entry_cpf.delete(first=0, last=len(entry_cpf.get()))
@@ -313,8 +318,7 @@ def salvar_alteracoes():
                 texto_bairro["text"] = ''
                 texto_cidade["text"] = ''
                 texto_uf["text"] = ''
-
-
+        atualizar_tabela()
 
 janela = Tk()
 janela.title('AS Sistemas v1.0')
@@ -369,12 +373,12 @@ label_cep.place(x=20, y=10)
 entry_cep = Entry(endereco, width=13, border=1, borderwidth=2, font='Calinre 10')
 entry_cep.place(x=70, y=10)
 
-buscar = Button(endereco, width=6, border=1, text='Buscar', font='Impact 9', bg='#289c2e', fg='white', command=buscar)
+buscar = Button(endereco, width=6, border=1, text='Buscar', font='Impact 8', bg='#289c2e', fg='white', command=buscar)
 buscar.place(x=170, y=8)
 
-limpar_endereco = Button(endereco, width=6, border=1, text='Limpar', font='Impact 9', bg='#d10404', fg='white',
+limpar_endereco = Button(endereco, width=6, border=1, text='Limpar', font='Impact 8', bg='#d10404', fg='white',
                          command=limpar_endereco)
-limpar_endereco.place(x=220, y=8)
+limpar_endereco.place(x=210, y=8)
 
 label_numero = Label(endereco, text='Número', font='Calibre 10')
 label_numero.place(x=360, y=10)
@@ -447,7 +451,9 @@ label_pesquisar_nome.place(x=530, y=6)
 entry_pesquisar = Entry(info, width=24, border=6, borderwidth=5, font='Calinre 10')
 entry_pesquisar.place(x=572, y=5)
 
-botao_pesquisar = Button(info, width=8, height=0, text='Pesquisar', font='Impact 9', bg='#289c2e', fg='white',
+
+# botão pesquisar 
+botao_pesquisar = Button(info, width=9, text='Pesquisar', font='Impact 8', bg='#289c2e', fg='white',
                          command=pesquisar)
 botao_pesquisar.place(x=757, y=4)
 
