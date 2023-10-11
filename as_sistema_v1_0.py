@@ -12,11 +12,11 @@ import os
 import openpyxl
 
 parametros = dict(
-    host='localhost',
-    passwd='132,mysql',
-    port=3306,
-    user='root',
-    database='estacionamento'
+    host='',
+    passwd='',
+    port=,
+    user='',
+    database=''
 )
 
 
